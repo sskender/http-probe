@@ -1,27 +1,36 @@
 #!/bin/sh
 
-echo "[INFO]  Starting the probing process"
+echo "[INFO]  Starting the probe"
 
 if [ "$#" -ne 1 ]; then
-    echo "[ERROR] Usage: $0 <http-endpoint>"
+    echo "[ERROR] Invalid endpoint. Usage: $0 <http-endpoint>"
     exit 1
 fi
 
-
-endpoint=$1
 sleep_time=10
 
 IFS='
 '
 
+endpoint=$1
 domain=$(echo $endpoint | awk -F/ '{ print $3 }')
 
 echo "[INFO]  Target endpoint: $endpoint"
 
 while [ 1 ]; do
-    echo "[INFO]  Trying to resolve $domain"
+    echo "[INFO]  Trying to resolve domain: $domain"
 
     records=$(dig +short $domain)
+    records_len=$(echo $records | wc -w)
+
+    if [ $records_len -eq 0 ]; then
+        echo "[ERROR] Domain could not be resolved"
+        echo "[INFO]  Waiting for $sleep_time seconds before the next probe"
+
+        sleep $sleep_time
+
+        continue
+    fi
 
     for record in $records; do
         echo "[INFO]  Record found: $record"
