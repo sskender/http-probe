@@ -5,9 +5,7 @@ RUN apk add --update-cache \
     curl \
     && rm -rf /var/cache/apk/*
 
-WORKDIR /app
+COPY probe.sh /usr/local/bin/probe
+RUN chmod u+x /usr/local/bin/probe
 
-COPY probe.sh probe.sh
-RUN chmod u+x probe.sh
-
-ENTRYPOINT [ "./probe.sh" ]
+ENTRYPOINT [ "probe" ]
