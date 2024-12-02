@@ -35,11 +35,6 @@ while [ 1 ]; do
 
     if [ $records_len -eq 0 ]; then
         print_log "Domain could not be resolved"
-
-        print_log "Waiting for ${sleep_time}s before sending the next probe"
-        sleep $sleep_time
-
-        continue
     fi
 
     for record in $records; do
